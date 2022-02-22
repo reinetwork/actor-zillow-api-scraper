@@ -1,4 +1,7 @@
 const Apify = require('apify');
+const stringComparison = require('string-comparison');
+
+const cos = stringComparison.cosine;
 
 const Puppeteer = require('puppeteer'); // eslint-disable-line no-unused-vars
 const { LABELS, TYPES, RESULTS_LIMIT, PAGES_LIMIT } = require('./constants'); // eslint-disable-line no-unused-vars
@@ -67,6 +70,7 @@ class PageHandler {
      * @returns queryZpid
      */
     async handleInitialPage(queryZpid, startUrls) {
+        // console.log('***handleInitialPage***', queryZpid, startUrls);
         const { page, proxyInfo, autoscaledPool, requestQueue, session } = this.context;
 
         try {
@@ -215,7 +219,7 @@ class PageHandler {
      * @param {ReturnType<typeof createQueryZpid>} queryZpid
      * @returns
      */
-    async handleQueryAndSearchPage(label, queryZpid) {
+    async handleQueryAndSearchPage(label, queryZpid, cleanStartUrls) {
         const { request: { userData: { term } }, session } = this.context;
 
         /** @type {any[]} */
@@ -248,7 +252,7 @@ class PageHandler {
         log.debug('searchState', { queryStates });
 
         if (shouldContinue && queryStates?.length) {
-            await this._processExtractedQueryStates(queryStates, totalCount, queryZpid);
+            await this._processExtractedQueryStates(queryStates, totalCount, queryZpid, cleanStartUrls);
         }
     }
 
@@ -484,13 +488,32 @@ class PageHandler {
      * @param {ReturnType<typeof createQueryZpid>} queryZpid
      * @returns
      */
-    async _processExtractedQueryStates(queryStates, totalCount, queryZpid) {
+    async _processExtractedQueryStates(queryStates, totalCount, queryZpid, cleanStartUrls) {
         const { page, request: { uniqueKey, userData: { pageNumber } } } = this.context;
         const { zpids } = this.globalContext;
         const currentPage = pageNumber || 1;
 
-        const results = this._mergeListResultsMapResults(queryStates);
-        const result = await this._validateQueryStatesResults(results, queryStates, totalCount);
+        let results = this._mergeListResultsMapResults(queryStates);
+        // compare to proved  startUrls
+        const su = [];
+        for (let i = 0; i < cleanStartUrls.length; i++) {
+            su.push(cleanStartUrls[i].url.split('/').pop().replace(/-/g, ' '));
+        }
+        // console.log('***startUrls***', su);
+        const filteredResults = [];
+        for (let i = 0; i < results.length; i++) {
+            let comparison = null;
+            comparison = cos.sortMatch(results[i]?.address, su);
+            // console.log('resultAddress', results[i]?.address, 'comparison', comparison);
+            // console.log(comparison.filter((f) => f.rating >= 0.9));
+            if (comparison.filter((f) => f.rating >= 0.9).length > 0) {
+                filteredResults.push(results[i]);
+            }
+        }
+        results = filteredResults;
+        // console.log('***results***', results);
+
+        const result = await this._validateQueryStatesResults(results, queryStates, results.length);
 
         if (result === false) {
             return;
@@ -506,8 +529,8 @@ class PageHandler {
             });
 
             if (currentPage === 1) {
-                await this._tryEnqueueMapSplits(qs, totalCount);
-                await this._tryEnqueuePaginationPages(qs, totalCount);
+                // await this._tryEnqueueMapSplits(qs, totalCount);
+                // await this._tryEnqueuePaginationPages(qs, totalCount);
             }
 
             await this._extractZpidsFromResults(results, queryZpid);

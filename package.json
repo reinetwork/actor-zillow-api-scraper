@@ -2,11 +2,12 @@
     "name": "actor-zillow-api",
     "version": "0.0.1",
     "dependencies": {
-        "apify": "^2.2.1",
-        "moment": "^2.29.1",
         "@turf/turf": "^6.5.0",
+        "apify": "^2.2.1",
         "got-scraping": "^3.2.8",
-        "puppeteer": "*"
+        "moment": "^2.29.1",
+        "puppeteer": "*",
+        "string-comparison": "^1.1.0"
     },
     "devDependencies": {
         "@apify/eslint-config": "^0.2.2",

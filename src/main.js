@@ -58,6 +58,7 @@ Apify.main(async () => {
 
     const requestQueue = await Apify.openRequestQueue();
 
+    const cleanStartUrls = JSON.parse(JSON.stringify(input.startUrls));
     const startUrls = await getInitializedStartUrls(input);
 
     /**
@@ -86,7 +87,7 @@ Apify.main(async () => {
         ? (globalContext.zpids.size + extra) >= input.maxItems
         : false);
 
-    const extendOutputFunction = await getExtendOutputFunction(globalContext, minMaxDate, getSimpleResult);
+    const extendOutputFunction = await getExtendOutputFunction(globalContext, minMaxDate, getSimpleResult, cleanStartUrls);
 
     const extendScraperFunction = await extendFunction({
         output: async () => {}, // no-op
@@ -245,7 +246,7 @@ Apify.main(async () => {
             } else if (label === LABELS.ZPIDS) {
                 await pageHandler.handleZpidsPage(queryZpid);
             } else if (label === LABELS.QUERY || label === LABELS.SEARCH) {
-                await pageHandler.handleQueryAndSearchPage(label, queryZpid);
+                await pageHandler.handleQueryAndSearchPage(label, queryZpid, cleanStartUrls);
             }
 
             await extendScraperFunction(undefined, {

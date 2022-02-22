@@ -1,4 +1,8 @@
 const Apify = require('apify');
+const stringComparison = require('string-comparison');
+
+const cos = stringComparison.cosine;
+
 const { TYPES, LABELS } = require('./constants');
 
 const fns = require('./functions');
@@ -119,7 +123,7 @@ const initializePreLaunchHooks = (input) => {
  * @param {ReturnType<createGetSimpleResult>} getSimpleResult
  * @returns
  */
-const getExtendOutputFunction = async ({ zpids, input }, minMaxDate, getSimpleResult) => {
+const getExtendOutputFunction = async ({ zpids, input }, minMaxDate, getSimpleResult, cleanStartUrls) => {
     const extendOutputFunction = await extendFunction({
         map: async (data) => getSimpleResult(data),
         filter: async ({ data }) => {
