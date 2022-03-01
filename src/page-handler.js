@@ -506,8 +506,10 @@ class PageHandler {
             comparison = cos.sortMatch(results[i]?.address, su);
             // console.log('resultAddress', results[i]?.address, 'comparison', comparison);
             // console.log(comparison.filter((f) => f.rating >= 0.9));
+            let matchedComparisons = null;
+            matchedComparisons = comparison.filter((f) => f.rating >= 0.9);
             if (comparison.filter((f) => f.rating >= 0.9).length > 0) {
-                results[i].matches = comparison.filter((f) => f.rating >= 0.9);
+                results[i].matches = matchedComparisons;
                 filteredResults.push(results[i]);
             }
         }
