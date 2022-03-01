@@ -507,6 +507,7 @@ class PageHandler {
             // console.log('resultAddress', results[i]?.address, 'comparison', comparison);
             // console.log(comparison.filter((f) => f.rating >= 0.9));
             if (comparison.filter((f) => f.rating >= 0.9).length > 0) {
+                results[i].matches = comparison.filter((f) => f.rating >= 0.9);
                 filteredResults.push(results[i]);
             }
         }
