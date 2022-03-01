@@ -159,7 +159,7 @@ const getExtendOutputFunction = async ({ zpids, input }, minMaxDate, getSimpleRe
             }
         },
         output: async (output, { data }) => {
-            console.log('***output/data***', output, data);
+            // console.log('***output/data***', output, data);
             if (data.zpid && !isOverItems({ zpids, input })) {
                 zpids.add(`${data.zpid}`);
                 await Apify.pushData(output);

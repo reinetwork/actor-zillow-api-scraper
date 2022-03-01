@@ -512,7 +512,7 @@ class PageHandler {
             }
         }
         results = filteredResults;
-        // console.log('***results***', results);
+        console.log('***results***', results);
 
         const result = await this._validateQueryStatesResults(results, queryStates, results.length);
 
