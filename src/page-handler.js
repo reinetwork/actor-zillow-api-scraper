@@ -517,7 +517,7 @@ class PageHandler {
                     return (prev.rating > current.rating) ? prev : current;
                 });
                 // get corresponding url from cleanStartUrls by key
-                results[i].baseUrl = cleanStartUrls[results[i].match.index];
+                results[i].baseUrl = cleanStartUrls[results[i].match.index].url;
 
                 filteredResults.push(results[i]);
             }
