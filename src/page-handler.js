@@ -509,7 +509,16 @@ class PageHandler {
             let matchedComparisons = null;
             matchedComparisons = comparison.filter((f) => f.rating >= 0.9);
             if (comparison.filter((f) => f.rating >= 0.9).length > 0) {
-                results[i].matches = matchedComparisons;
+                // get highest match
+                results[i].match = matchedComparisons.reduce((prev, current) => {
+                    return (prev.rating > current.rating) ? prev : current;
+                });
+                // get corresponding url from
+                results[i].baseUrl = cleanStartUrls[results[i].match.index];
+
+                // TEMP
+                results[i].matchStr = JSON.stringify(results[i].match);
+
                 filteredResults.push(results[i]);
             }
         }
