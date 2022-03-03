@@ -523,9 +523,10 @@ class PageHandler {
             }
         }
         // reduce results to get (1) zillow address with highest match
-        results = filteredResults.reduce((prev, current) => {
+        results = [];
+        results.push(filteredResults.reduce((prev, current) => {
             return (prev.match.rating > current.match.rating) ? prev : current;
-        });
+        }));
         console.log('***results***', results);
 
         // send to opportunist
