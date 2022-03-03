@@ -541,8 +541,8 @@ class PageHandler {
             });
 
             if (currentPage === 1) {
-                // await this._tryEnqueueMapSplits(qs, totalCount);
-                // await this._tryEnqueuePaginationPages(qs, totalCount);
+                await this._tryEnqueueMapSplits(qs, totalCount);
+                await this._tryEnqueuePaginationPages(qs, totalCount);
             }
 
             await this._extractZpidsFromResults(results, queryZpid);
