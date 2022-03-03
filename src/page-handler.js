@@ -507,8 +507,8 @@ class PageHandler {
             // console.log('resultAddress', results[i]?.address, 'comparison', comparison);
             // console.log(comparison.filter((f) => f.rating >= 0.9));
             let matchedComparisons = null;
-            matchedComparisons = comparison.filter((f) => f.rating >= 0.9);
-            if (comparison.filter((f) => f.rating >= 0.9).length > 0) {
+            matchedComparisons = comparison.filter((f) => f.rating >= 0.8);
+            if (comparison.filter((f) => f.rating >= 0.8).length > 0) {
                 // get highest match
                 results[i].match = matchedComparisons.reduce((prev, current) => {
                     return (prev.rating > current.rating) ? prev : current;
