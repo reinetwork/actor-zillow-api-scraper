@@ -1,5 +1,6 @@
 const Apify = require('apify');
 const stringComparison = require('string-comparison');
+const axios = require('axios');
 
 const cos = stringComparison.cosine;
 
@@ -515,6 +516,9 @@ class PageHandler {
                 });
                 // get corresponding url from cleanStartUrls
                 results[i].baseUrl = cleanStartUrls[results[i].match.index];
+
+                // send to opportunist
+                // axios.post(`https://opportunist.reinetworklp.com/api/zillow/update`, { data: results[i] });
 
                 filteredResults.push(results[i]);
             }
