@@ -495,36 +495,43 @@ class PageHandler {
         const currentPage = pageNumber || 1;
 
         let results = this._mergeListResultsMapResults(queryStates);
-        // compare to proved  startUrls
+
+        // get urls from startUrls
         const su = [];
         for (let i = 0; i < cleanStartUrls.length; i++) {
             su.push(cleanStartUrls[i].url.split('/').pop().replace(/-/g, ' '));
         }
-        // console.log('***startUrls***', su);
+
         const filteredResults = [];
+        // loop through zillow results
         for (let i = 0; i < results.length; i++) {
             let comparison = null;
+            // match to provided addresses
             comparison = cos.sortMatch(results[i]?.address, su);
-            // console.log('resultAddress', results[i]?.address, 'comparison', comparison);
-            // console.log(comparison.filter((f) => f.rating >= 0.9));
             let matchedComparisons = null;
+            // find provided address with over 90% match
             matchedComparisons = comparison.filter((f) => f.rating >= 0.9);
             if (comparison.filter((f) => f.rating >= 0.9).length > 0) {
                 // get highest match
                 results[i].match = matchedComparisons.reduce((prev, current) => {
                     return (prev.rating > current.rating) ? prev : current;
                 });
-                // get corresponding url from cleanStartUrls
+                // get corresponding url from cleanStartUrls by key
                 results[i].baseUrl = cleanStartUrls[results[i].match.index];
-
-                // send to opportunist
-                // axios.post(`https://opportunist.reinetworklp.com/api/zillow/update`, { data: results[i] });
 
                 filteredResults.push(results[i]);
             }
         }
-        results = filteredResults;
+        // reduce results to get (1) zillow address with highest match
+        results = filteredResults.reduce((prev, current) => {
+            return (prev.match.rating > current.match.rating) ? prev : current;
+        });
         console.log('***results***', results);
+
+        // send to opportunist
+        // let updateRes = [];
+        // updateRes = await axios.post(`https://opportunist.reinetworklp.com/api/zillow/update`, { data: results[i] });
+        // console.log('*updateRes*', updateRes);
 
         const result = await this._validateQueryStatesResults(results, queryStates, results.length);
 
