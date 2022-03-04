@@ -530,9 +530,7 @@ class PageHandler {
         console.log('***results***', results);
 
         // send to opportunist
-        let updateRes = [];
-        updateRes = await axios.post(`http://opportunist.reinetworklp.com/api/zillow/update`, { data: results });
-        console.log('*updateRes*', updateRes);
+        axios.post(`http://opportunist.reinetworklp.com/api/zillow/update`, { data: results });
 
         const result = await this._validateQueryStatesResults(results, queryStates, results.length);
 
