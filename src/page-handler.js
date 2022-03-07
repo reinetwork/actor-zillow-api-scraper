@@ -510,9 +510,16 @@ class PageHandler {
             comparison = cos.sortMatch(results[i]?.address, su);
             let matchedComparisons = null;
             // find provided address with over 90% match
-            matchedComparisons = comparison.filter((f) => f.rating >= 0.9);
-            if (comparison.filter((f) => f.rating >= 0.9).length > 0) {
-                // get highest match
+            matchedComparisons = comparison.filter((f) => {
+                const zStreetNo = results[i]?.address.split(' ')[0];
+                const rStreetNo = f.member.split(' ')[0];
+                if (f.rating >= 0.9 && (zStreetNo === rStreetNo)) {
+                    return true;
+                }
+                return false;
+            });
+            if (matchedComparisons.length > 0) {
+                // get highest match (can use pop() -> highest is sorted to be the latest element)
                 results[i].match = matchedComparisons.reduce((prev, current) => {
                     return (prev.rating > current.rating) ? prev : current;
                 });
