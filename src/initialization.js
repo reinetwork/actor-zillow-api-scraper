@@ -203,6 +203,7 @@ const getSimpleResultFunction = (input) => {
         currency: true,
         hdpUrl: true,
         responsivePhotos: true,
+        zestimate: true,
     };
 
     const getSimpleResult = createGetSimpleResult(
@@ -227,7 +228,6 @@ const getSimpleResultFunction = (input) => {
                 moveInCompletionDate: true,
                 lastSoldPrice: true,
                 contingentListingType: true,
-                zestimate: true,
                 zestimateLowPercent: true,
                 zestimateHighPercent: true,
                 rentZestimate: true,
