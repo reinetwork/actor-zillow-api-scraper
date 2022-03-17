@@ -173,7 +173,6 @@ Apify.main(async () => {
                 throw new Error('Ending scrape');
             }
 
-
             /** @type {any} */
             await puppeteer.blockRequests(page, {
                 urlPatterns: URL_PATTERNS_TO_BLOCK.concat(request.userData.label === LABELS.DETAIL ? [
@@ -219,6 +218,7 @@ Apify.main(async () => {
         browserPoolOptions,
         maxConcurrency: !queryZpid ? 1 : 10,
         handlePageFunction: async ({ page, request, crawler: { autoscaledPool }, session, response, proxyInfo }) => {
+            console.log('***handlePageFunction', { page, request, crawler: { autoscaledPool }, session, response, proxyInfo });
             const context = { page, request, crawler: { requestQueue, autoscaledPool }, session, response, proxyInfo };
             const pageHandler = new PageHandler(context, globalContext, extendOutputFunction);
 
@@ -287,5 +287,6 @@ Apify.main(async () => {
         throw new Error('The selected proxy group seems to be blocked, try a different one or contact Apify on Intercom');
     }
 
+    console.log('globalContext', globalContext);
     log.info(`Done with ${globalContext.zpids.size} listings!`);
 });
