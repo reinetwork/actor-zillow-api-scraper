@@ -495,6 +495,7 @@ class PageHandler {
         const currentPage = pageNumber || 1;
 
         let results = this._mergeListResultsMapResults(queryStates);
+        console.log('***results', results);
 
         // get urls from startUrls
         const su = [];
@@ -535,7 +536,9 @@ class PageHandler {
             return (prev.match.rating > current.match.rating) ? prev : current;
         }));
         console.log('***results***', results);
-
+        if (results.length === 0) {
+            // results.push({ detailUrl: '', zestimate: 0,  })
+        }
         // send to opportunist
         axios.post(`http://opportunist.reinetworklp.com/api/zillow/update`, { data: results });
 
