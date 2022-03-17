@@ -220,7 +220,7 @@ class PageHandler {
      * @param {ReturnType<typeof createQueryZpid>} queryZpid
      * @returns
      */
-    async handleQueryAndSearchPage(label, queryZpid, cleanStartUrls) {
+    async handleQueryAndSearchPage(label, queryZpid, cleanStartUrls, reducedStartUrls) {
         const { request: { userData: { term } }, session } = this.context;
 
         /** @type {any[]} */
@@ -253,7 +253,7 @@ class PageHandler {
         log.debug('searchState', { queryStates });
 
         if (shouldContinue && queryStates?.length) {
-            await this._processExtractedQueryStates(queryStates, totalCount, queryZpid, cleanStartUrls);
+            await this._processExtractedQueryStates(queryStates, totalCount, queryZpid, cleanStartUrls, reducedStartUrls);
         }
     }
 
@@ -489,7 +489,7 @@ class PageHandler {
      * @param {ReturnType<typeof createQueryZpid>} queryZpid
      * @returns
      */
-    async _processExtractedQueryStates(queryStates, totalCount, queryZpid, cleanStartUrls) {
+    async _processExtractedQueryStates(queryStates, totalCount, queryZpid, cleanStartUrls, reducedStartUrls) {
         const { page, request: { uniqueKey, userData: { pageNumber } } } = this.context;
         const { zpids } = this.globalContext;
         const currentPage = pageNumber || 1;
@@ -541,16 +541,16 @@ class PageHandler {
         axios.post(`http://opportunist.reinetworklp.com/api/zillow/update`, { data: results });
 
         // get all startUrls that did not match
-        const reducedStartUrls = cleanStartUrls.filter((f) => {
+        reducedStartUrls = cleanStartUrls.filter((f) => {
             return !results.find((r) => r?.baseUrl === f.url || f?.matched);
         });
-        console.log('***reducedStartUrls', reducedStartUrls);
+        // console.log('***reducedStartUrls', reducedStartUrls);
 
-        reducedStartUrls.forEach((rSU) => {
+        /* reducedStartUrls.forEach((rSU) => {
             axios.post(`http://opportunist.reinetworklp.com/api/zillow/update`,
                 { data: [{ baseUrl: rSU.url, detailUrl: '', zestimate: 0 }] },
             );
-        });
+        }); */
 
         const result = await this._validateQueryStatesResults(results, queryStates, results.length);
 
