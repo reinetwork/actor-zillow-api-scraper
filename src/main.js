@@ -60,7 +60,6 @@ Apify.main(async () => {
 
     const cleanStartUrls = JSON.parse(JSON.stringify(input.startUrls));
     const startUrls = await getInitializedStartUrls(input);
-    const reducedStartUrls = [];
 
     /**
      * @type {ReturnType<typeof createQueryZpid> | null}
@@ -88,7 +87,7 @@ Apify.main(async () => {
         ? (globalContext.zpids.size + extra) >= input.maxItems
         : false);
 
-    const extendOutputFunction = await getExtendOutputFunction(globalContext, minMaxDate, getSimpleResult, cleanStartUrls, reducedStartUrls);
+    const extendOutputFunction = await getExtendOutputFunction(globalContext, minMaxDate, getSimpleResult, cleanStartUrls);
 
     const extendScraperFunction = await extendFunction({
         output: async () => {}, // no-op
@@ -246,7 +245,7 @@ Apify.main(async () => {
             } else if (label === LABELS.ZPIDS) {
                 await pageHandler.handleZpidsPage(queryZpid);
             } else if (label === LABELS.QUERY || label === LABELS.SEARCH) {
-                await pageHandler.handleQueryAndSearchPage(label, queryZpid, cleanStartUrls, reducedStartUrls);
+                await pageHandler.handleQueryAndSearchPage(label, queryZpid, cleanStartUrls);
             }
 
             await extendScraperFunction(undefined, {
@@ -286,8 +285,6 @@ Apify.main(async () => {
         // this usually means the proxy is busted, we need to fail
         throw new Error('The selected proxy group seems to be blocked, try a different one or contact Apify on Intercom');
     }
-
-    console.log('***reducedStartUrls', reducedStartUrls);
 
     log.info(`Done with ${globalContext.zpids.size} listings!`);
 });
