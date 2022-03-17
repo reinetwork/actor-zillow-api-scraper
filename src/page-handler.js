@@ -495,7 +495,6 @@ class PageHandler {
         const currentPage = pageNumber || 1;
 
         let results = this._mergeListResultsMapResults(queryStates);
-        console.log('***results', results);
 
         // get urls from startUrls
         const su = [];
@@ -549,7 +548,7 @@ class PageHandler {
 
         reducedStartUrls.forEach((rSU) => {
             axios.post(`http://opportunist.reinetworklp.com/api/zillow/update`,
-                { baseUrl: rSU.url, detailUrl: '', zestimate: 0 },
+                { data: [{ baseUrl: rSU.url, detailUrl: '', zestimate: 0 }] },
             );
         });
 
