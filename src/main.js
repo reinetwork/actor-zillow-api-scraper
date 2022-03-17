@@ -286,6 +286,5 @@ Apify.main(async () => {
         throw new Error('The selected proxy group seems to be blocked, try a different one or contact Apify on Intercom');
     }
 
-    console.log('globalContext', JSON.stringify(globalContext, null, 4));
     log.info(`Done with ${globalContext.zpids.size} listings!`);
 });

@@ -526,6 +526,7 @@ class PageHandler {
                 });
                 // get corresponding url from cleanStartUrls by key
                 results[i].baseUrl = cleanStartUrls[results[i].match.index].url;
+                cleanStartUrls[results[i].match.index].matched = true;
 
                 filteredResults.push(results[i]);
             }
@@ -539,7 +540,7 @@ class PageHandler {
 
         // get all startUrls that did not match
         const reducedStartUrls = cleanStartUrls.filter((f) => {
-            return !results.find((o) => o?.baseUrl === f.url);
+            return !results.find((r) => r?.baseUrl === f.url && !f?.matched);
         });
         console.log('***reducedStartUrls', reducedStartUrls);
 
