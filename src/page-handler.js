@@ -540,7 +540,7 @@ class PageHandler {
 
         // get all startUrls that did not match
         const reducedStartUrls = cleanStartUrls.filter((f) => {
-            return !results.find((r) => r?.baseUrl === f.url && !f?.matched);
+            return !results.find((r) => r?.baseUrl === f.url && f?.matched);
         });
         console.log('***reducedStartUrls', reducedStartUrls);
 
