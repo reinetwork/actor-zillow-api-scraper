@@ -538,17 +538,20 @@ class PageHandler {
         }));
         console.log('***results***', results);
 
+        // send to opportunist
+        axios.post(`http://opportunist.reinetworklp.com/api/zillow/update`, { data: results });
+
         // get all startUrls that did not match
         const reducedStartUrls = cleanStartUrls.filter((f) => {
             return !results.find((r) => r?.baseUrl === f.url || f?.matched);
         });
         console.log('***reducedStartUrls', reducedStartUrls);
 
-        if (results.length === 0) {
-            // results.push({ detailUrl: '', zestimate: 0,  })
-        }
-        // send to opportunist
-        axios.post(`http://opportunist.reinetworklp.com/api/zillow/update`, { data: results });
+        reducedStartUrls.forEach((rSU) => {
+            axios.post(`http://opportunist.reinetworklp.com/api/zillow/update`,
+                { baseUrl: rSU.url, detailUrl: '', zestimate: 0 },
+            );
+        });
 
         const result = await this._validateQueryStatesResults(results, queryStates, results.length);
 
