@@ -536,6 +536,13 @@ class PageHandler {
             return (prev.match.rating > current.match.rating) ? prev : current;
         }));
         console.log('***results***', results);
+
+        // get all startUrls that did not match
+        const reducedStartUrls = cleanStartUrls.filter((f) => {
+            return !results.find((o) => o?.baseUrl === f.url);
+        });
+        console.log('***reducedStartUrls', reducedStartUrls);
+
         if (results.length === 0) {
             // results.push({ detailUrl: '', zestimate: 0,  })
         }
