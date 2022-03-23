@@ -538,7 +538,11 @@ class PageHandler {
         console.log('***results***', results);
 
         // send to opportunist
-        axios.post(`http://opportunist.reinetworklp.com/api/zillow/update`, { data: results });
+        try {
+            axios.post(`http://opportunist.reinetworklp.com/api/zillow/update`, { data: results });
+        } catch (e) {
+            console.log('err sending to webhook /zillow/update: ', JSON.stringify(results));
+        }
 
         // get all startUrls that did not match
         const reducedStartUrls = cleanStartUrls.filter((f) => {
