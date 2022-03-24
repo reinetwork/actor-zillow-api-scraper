@@ -220,7 +220,7 @@ class PageHandler {
      * @param {ReturnType<typeof createQueryZpid>} queryZpid
      * @returns
      */
-    async handleQueryAndSearchPage(label, queryZpid, cleanStartUrls) {
+    async handleQueryAndSearchPage(label, queryZpid, cleanStartUrls, handleReducedStartUrls) {
         const { request: { userData: { term } }, session } = this.context;
 
         /** @type {any[]} */
@@ -253,7 +253,7 @@ class PageHandler {
         log.debug('searchState', { queryStates });
 
         if (shouldContinue && queryStates?.length) {
-            await this._processExtractedQueryStates(queryStates, totalCount, queryZpid, cleanStartUrls);
+            await this._processExtractedQueryStates(queryStates, totalCount, queryZpid, cleanStartUrls, handleReducedStartUrls);
         }
     }
 
@@ -489,7 +489,7 @@ class PageHandler {
      * @param {ReturnType<typeof createQueryZpid>} queryZpid
      * @returns
      */
-    async _processExtractedQueryStates(queryStates, totalCount, queryZpid, cleanStartUrls) {
+    async _processExtractedQueryStates(queryStates, totalCount, queryZpid, cleanStartUrls, handleReducedStartUrls) {
         const { page, request: { uniqueKey, userData: { pageNumber } } } = this.context;
         const { zpids } = this.globalContext;
         const currentPage = pageNumber || 1;
@@ -548,6 +548,7 @@ class PageHandler {
         const reducedStartUrls = cleanStartUrls.filter((f) => {
             return !results.find((r) => r?.baseUrl === f.url || f?.matched);
         });
+        handleReducedStartUrls(reducedStartUrls);
         // console.log('***reducedStartUrls', reducedStartUrls);
 
         /*
