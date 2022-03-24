@@ -61,7 +61,8 @@ Apify.main(async () => {
 
     const cleanStartUrls = JSON.parse(JSON.stringify(input.startUrls));
     const startUrls = await getInitializedStartUrls(input);
-    let reducedStartUrls = [];
+    let reducedStartUrls = [];// urls to be updated with NOT_FOUND
+    const retryStartUrls = [];// urls that can be retried
     const handleReducedStartUrls = (results) => {
         reducedStartUrls = results;
     };
@@ -269,6 +270,13 @@ Apify.main(async () => {
         },
         handleFailedRequestFunction: async ({ request, error }) => {
             // This function is called when the crawling of a request failed too many times
+
+            // add to list of urls that can be retried (does nothing only for log)
+            retryStartUrls.push(request.url);
+            // remove urls that can be retried from reducedSTartUrls
+            const removeIndex = reducedStartUrls.map((item) => item.url === request.url);
+            (removeIndex >= 0) && reducedStartUrls.splice(removeIndex, 1);
+
             log.exception(error, `\n\nRequest ${request.url} failed too many times.\n\n`);
         },
     });
@@ -292,6 +300,7 @@ Apify.main(async () => {
     }
 
     console.log('reducedStartUrls', reducedStartUrls);
+    console.log('retryStartUrls', retryStartUrls);
 
     log.info(`Done with ${globalContext.zpids.size} listings!`);
 });
