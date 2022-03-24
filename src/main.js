@@ -61,7 +61,7 @@ Apify.main(async () => {
 
     const cleanStartUrls = JSON.parse(JSON.stringify(input.startUrls));
     const startUrls = await getInitializedStartUrls(input);
-    const reducedStartUrls = [];
+    let reducedStartUrls = [];
     const handleReducedStartUrls = (results) => {
         reducedStartUrls = results;
     };
