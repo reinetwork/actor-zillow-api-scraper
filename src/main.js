@@ -304,7 +304,7 @@ Apify.main(async () => {
         throw new Error('The selected proxy group seems to be blocked, try a different one or contact Apify on Intercom');
     }
 
-    // console.log('reducedStartUrls', reducedStartUrls);
+    console.log('reducedStartUrls', reducedStartUrls);
     try {
         // update all urls that returned no results without failing to "NOT_FOUND"
         axios.post(`http://opportunist.reinetworklp.com/api/zillow/update`,

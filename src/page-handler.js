@@ -549,15 +549,6 @@ class PageHandler {
             return !results.find((r) => r?.baseUrl === f.url || f?.matched);
         });
         handleReducedStartUrls(reducedStartUrls);
-        // console.log('***reducedStartUrls', reducedStartUrls);
-
-        /*
-        reducedStartUrls.forEach((rSU) => {
-            axios.post(`http://opportunist.reinetworklp.com/api/zillow/update`,
-                { data: [{ baseUrl: rSU.url, detailUrl: '', zestimate: 0 }] },
-            );
-        });
-        */
 
         const result = await this._validateQueryStatesResults(results, queryStates, results.length);
 
