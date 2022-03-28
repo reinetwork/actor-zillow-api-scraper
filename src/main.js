@@ -304,11 +304,17 @@ Apify.main(async () => {
         throw new Error('The selected proxy group seems to be blocked, try a different one or contact Apify on Intercom');
     }
 
-    console.log('reducedStartUrls', reducedStartUrls);
-    axios.post(`http://opportunist.reinetworklp.com/api/zillow/update`,
-        { data: reducedStartUrls },
-    );
+    // console.log('reducedStartUrls', reducedStartUrls);
+    try {
+        // update all urls that returned no results without failing to "NOT_FOUND"
+        axios.post(`http://opportunist.reinetworklp.com/api/zillow/update`,
+            { data: reducedStartUrls },
+        );
+    } catch (e) {
+        console.log('err: bulk send to webhook /zillow/update: ');
+    }
 
+    // retry all urls that failed to fetch results
     console.log('retryStartUrls', retryStartUrls);// do nothing
 
     log.info(`Done with ${globalContext.zpids.size} listings!`);
