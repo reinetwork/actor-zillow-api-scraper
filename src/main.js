@@ -64,7 +64,12 @@ Apify.main(async () => {
     let reducedStartUrls = [];// urls to be updated with NOT_FOUND
     const retryStartUrls = [];// urls that can be retried
     const handleReducedStartUrls = (results) => {
-        reducedStartUrls = results;
+        addObjProps = [];
+        results.forEach((r) => {
+            r.baseUrl = r.url;
+            addObjProps.push(r);
+        });
+        reducedStartUrls = addObjProps;
     };
 
     /**
@@ -300,7 +305,11 @@ Apify.main(async () => {
     }
 
     console.log('reducedStartUrls', reducedStartUrls);
-    console.log('retryStartUrls', retryStartUrls);
+    axios.post(`http://opportunist.reinetworklp.com/api/zillow/update`,
+        { data: reducedStartUrls },
+    );
+
+    console.log('retryStartUrls', retryStartUrls);// do nothing
 
     log.info(`Done with ${globalContext.zpids.size} listings!`);
 });
