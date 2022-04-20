@@ -309,7 +309,9 @@ Apify.main(async () => {
         // update all urls that returned no results without failing to "NOT_FOUND"
         axios.post(`http://opportunist.reinetworklp.com/api/zillow/update`,
             { data: reducedStartUrls },
-        );
+        ).catch((err) => {
+            console.log('caught err reducedStartUrls');
+        });
     } catch (e) {
         console.log('err: bulk send to webhook /zillow/update: ');
     }

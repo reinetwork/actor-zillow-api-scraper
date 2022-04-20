@@ -539,7 +539,9 @@ class PageHandler {
 
         // send to opportunist
         try {
-            axios.post(`http://opportunist.reinetworklp.com/api/zillow/update`, { data: results });
+            axios.post(`http://opportunist.reinetworklp.com/api/zillow/update`, { data: results }).catch((err) => {
+                console.log('caught the err', { data: results });
+            });
         } catch (e) {
             console.log('err sending to webhook /zillow/update: ', JSON.stringify(results));
         }
